@@ -1,6 +1,8 @@
 package co.edu.iumafis.chronic.controller.ini;
 
 import co.edu.iumafis.chronic.controller.login.CLogin;
+import static co.edu.iumafis.chronic.model.dao.ResourceManager.setConnection;
+import java.sql.SQLException;
 
 /**
  * Main Class
@@ -15,13 +17,15 @@ public final class ChronicIni {
      * Start the application.
      * 
      * @param args
+     * @throws java.sql.SQLException
      */
-    public static void main(String[] args) { ChronicIni chronicIni = new ChronicIni(); }
+    public static void main(String[] args) throws SQLException { ChronicIni chronicIni = new ChronicIni(); }
     
     /**
      * Main constructor, initializes the plaf JTattoo library.
+     * @throws java.sql.SQLException
      */
-    public ChronicIni() {   
+    public ChronicIni() throws SQLException {   
 //        try {             
 //            //UIManager.setLookAndFeel("com.jtattoo.plaf.noire.NoireLookAndFeel");        
 //
@@ -29,10 +33,9 @@ public final class ChronicIni {
 //            //
 //        }
 
-//        if (setConnection()) {             
-//            LOG.info("HulkStore run");
+        if (setConnection()) {            
             CLogin cLogin = new CLogin(); 
-//        }        
+        }        
     }
     
 }
