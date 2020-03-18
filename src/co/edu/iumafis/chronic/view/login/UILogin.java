@@ -1,9 +1,6 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.iumafis.chronic.view.login;
+
+import co.edu.iumafis.chronic.controller.login.CLogin;
 
 /**
  *
@@ -11,11 +8,19 @@ package co.edu.iumafis.chronic.view.login;
  */
 public class UILogin extends javax.swing.JFrame {
 
+    private final CLogin controller;
+    
     /**
-     * Creates new form UILogin
+     * Constructor.
+     * 
+     * @param controller
      */
-    public UILogin() {
+    public UILogin(CLogin controller) {
         initComponents();
+        this.setVisible(true);
+        this.setTitle("LOGIN - Chronic");
+        setLocationRelativeTo(null);        
+        this.controller = controller;
     }
 
     /**
@@ -102,23 +107,12 @@ public class UILogin extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UILogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UILogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UILogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UILogin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UILogin().setVisible(true);
-            }
-        });
+        
+        //</editor-fold>
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
