@@ -3,8 +3,11 @@ package co.edu.iumafis.chronic.view.login;
 import co.edu.iumafis.chronic.controller.login.CLogin;
 
 /**
- *
- * @author Estudiantes
+ * Main view of the User Login
+ * 
+ * @author Alexis Duque
+ * @version 1.0
+ * @since 2020-03-28
  */
 public class UILogin extends javax.swing.JFrame {
 
@@ -42,6 +45,11 @@ public class UILogin extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btnLogin.setText("Ingresar");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         jLabel1.setText("Usuario");
 
@@ -90,6 +98,10 @@ public class UILogin extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        controller.validate(this.txtUser, this.pwdPass);
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
