@@ -1,21 +1,34 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.iumafis.chronic.view.menu;
 
+import co.edu.iumafis.chronic.controller.menu.CMenu;
+import co.edu.iumafis.chronic.model.dto.user.UserDto;
+
 /**
- *
- * @author Estudiantes
+ * Main view of the User Login
+ * 
+ * @author Alexis Duque
+ * @version 1.0
+ * @since 2020-03-28
  */
 public class UIMenu extends javax.swing.JFrame {
 
+    public static int idUser; // Store the user id that uses the menu.
+    private final CMenu controller;
+    
     /**
-     * Creates new form UIMenu
+     * Constructor.
+     * 
+     * @param controller
+     * @param user 
      */
-    public UIMenu() {
+    public UIMenu(CMenu controller, UserDto user) {
         initComponents();
+        this.setVisible(true);
+        this.setTitle("Menú - Sistema de Control CHRONIC");
+        setLocationRelativeTo(null);
+        
+        this.controller = controller;
+        controller.upload(user);
     }
 
     /**
@@ -66,7 +79,7 @@ public class UIMenu extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnClose)
                     .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 131, Short.MAX_VALUE)
@@ -99,23 +112,12 @@ public class UIMenu extends javax.swing.JFrame {
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UIMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UIMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UIMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(UIMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UIMenu().setVisible(true);
-            }
-        });
+        
+        //</editor-fold>
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
