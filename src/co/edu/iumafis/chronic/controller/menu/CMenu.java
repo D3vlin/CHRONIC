@@ -2,6 +2,7 @@ package co.edu.iumafis.chronic.controller.menu;
 
 import co.edu.iumafis.chronic.controller.login.CLogin;
 import co.edu.iumafis.chronic.controller.reservation.CReservation;
+import co.edu.iumafis.chronic.controller.sale.CSale;
 import co.edu.iumafis.chronic.model.dao.DaoFactory;
 import co.edu.iumafis.chronic.model.dao.user.UserDao;
 import co.edu.iumafis.chronic.model.dao.user.UserDaoException;
@@ -82,7 +83,7 @@ public final class CMenu {
      * Show the form to manage the stores.
      */
     public void sales() {
-        //CSale cSale = new CSale();
+        CSale cSale = new CSale();
         window.dispose();
     }   
 }

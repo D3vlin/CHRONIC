@@ -1,6 +1,7 @@
 package co.edu.iumafis.chronic.model.dao;
 
 import co.edu.iumafis.chronic.model.dao.reservation.ReservationDao;
+import co.edu.iumafis.chronic.model.dao.sale.SaleDao;
 import co.edu.iumafis.chronic.model.dao.user.UserDao;
 import java.sql.Connection;
 
@@ -42,4 +43,19 @@ public final class DaoFactory {
      * @return ReservationDao
      */
     public static ReservationDao createReservationDao(Connection conn) { return new ReservationDao( conn ); }
+    
+    /**
+     * createSaleDao.
+     * 
+     * @return SaleDao
+     */
+    public static SaleDao createSaleDao() { return new SaleDao(); }
+
+    /**
+     * createReservationDao.
+     * 
+     * @param conn
+     * @return ReservationDao
+     */
+    public static SaleDao createSaleDao(Connection conn) { return new SaleDao( conn ); }
 }

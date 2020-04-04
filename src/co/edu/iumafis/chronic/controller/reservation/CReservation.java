@@ -38,8 +38,7 @@ public class CReservation {
      * 
      * @param txtID
      */
-    public void upload(JTextField txtID) {    
-        
+    public void upload(JTextField txtID) {
         findNextId(txtID);
     }
     

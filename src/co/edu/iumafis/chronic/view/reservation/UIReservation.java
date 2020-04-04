@@ -21,7 +21,7 @@ public class UIReservation extends javax.swing.JFrame {
     public UIReservation(CReservation controller) {
         initComponents();
         this.setVisible(true);
-        this.setTitle("GESTIÓN DE UNIDAD");
+        this.setTitle("GESTIÓN DE RESERVAS");
         setLocationRelativeTo(null);
         
         this.controller = controller;
