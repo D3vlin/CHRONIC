@@ -1,6 +1,7 @@
 package co.edu.iumafis.chronic.controller.menu;
 
 import co.edu.iumafis.chronic.controller.login.CLogin;
+import co.edu.iumafis.chronic.controller.reservation.CReservation;
 import co.edu.iumafis.chronic.model.dao.DaoFactory;
 import co.edu.iumafis.chronic.model.dao.user.UserDao;
 import co.edu.iumafis.chronic.model.dao.user.UserDaoException;
@@ -67,5 +68,21 @@ public final class CMenu {
      */
     public void showForm() {
         window.setVisible(true);
-    }    
+    }
+
+    /**
+     * Show the form to manage the stores.
+     */
+    public void reservations() {
+        CReservation cReservation = new CReservation();
+        window.dispose();
+    } 
+
+    /**
+     * Show the form to manage the stores.
+     */
+    public void sales() {
+        //CSale cSale = new CSale();
+        window.dispose();
+    }   
 }

@@ -1,21 +1,82 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package co.edu.iumafis.chronic.view.reservation;
 
+import co.edu.iumafis.chronic.controller.reservation.CReservation;
+
 /**
- *
- * @author Estudiantes
+ * Main view of Unit Management
+ * 
+ * @author Alexis Duque
+ * @version 1.0
+ * @since 2020-03-28
  */
 public class UIReservation extends javax.swing.JFrame {
 
+    private final CReservation controller;
+    
     /**
-     * Creates new form UIReservation
+     * Constructor.
+     * 
+     * @param controller 
      */
-    public UIReservation() {
+    public UIReservation(CReservation controller) {
         initComponents();
+        this.setVisible(true);
+        this.setTitle("GESTIÓN DE UNIDAD");
+        setLocationRelativeTo(null);
+        
+        this.controller = controller;
+        controller.upload(txtID);
+        
+        changeStateReservation();
+    }
+    
+    private void changeStateReservation() {
+        
+        lblTitle.setText("Realizar Reserva");
+        controller.findNextId(txtID);
+        controller.cleanFields(txtID, txtDocument, txtFullName, txtAge, txtQuantity, lblTotalValue);
+        changeStateControls(true);
+        changeStateButtons(true);
+    }
+    
+    private void changeStateSearch() {
+        
+        lblTitle.setText("Buscar Reserva");
+        controller.cleanFields(txtID, txtDocument, txtFullName, txtAge, txtQuantity, lblTotalValue);
+        changeStateControls(false);
+        txtID.setText(""); 
+        lblValue.setText("0");
+        changeStateButtons(true);
+    }
+    
+    private void changeStateControls(boolean state) {
+        
+        txtID.setEditable(!state);      
+        cmbType.setEnabled(state); 
+        txtDocument.setEditable(state);         
+        txtFullName.setEditable(state);
+        txtAge.setEditable(state);
+        txtQuantity.setEditable(state);
+    }
+    
+    private void changeStateFound() {
+        
+        changeStateControls(true);
+        txtID.setEditable(false);
+        btnReservation.setEnabled(false);
+        btnSearch.setEnabled(false);      
+        btnUpdate.setEnabled(true);
+        btnRemove.setEnabled(true);
+        btnClean.setEnabled(true);
+    }
+    
+    private void changeStateButtons(boolean state) {
+        
+        btnReservation.setEnabled(state);
+        btnSearch.setEnabled(state);      
+        btnUpdate.setEnabled(!state);
+        btnRemove.setEnabled(!state);
+        btnClean.setEnabled(!state);
     }
 
     /**
@@ -33,36 +94,46 @@ public class UIReservation extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jLabel10 = new javax.swing.JLabel();
+        lblTitle = new javax.swing.JLabel();
         lblTotalValue = new javax.swing.JLabel();
         txtQuantity = new javax.swing.JTextField();
         cmbType = new javax.swing.JComboBox<>();
-        txtDate = new javax.swing.JTextField();
-        txtHour = new javax.swing.JTextField();
         txtAge = new javax.swing.JTextField();
         txtFullName = new javax.swing.JTextField();
         txtDocument = new javax.swing.JTextField();
         btnRemove = new javax.swing.JButton();
         btnClean = new javax.swing.JButton();
-        btnExit = new javax.swing.JButton();
         btnReturn = new javax.swing.JButton();
         jLabel12 = new javax.swing.JLabel();
         txtID = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         lblValue = new javax.swing.JLabel();
-        jLabel11 = new javax.swing.JLabel();
-        cmbSeat = new javax.swing.JComboBox<>();
+        btnUpdate = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setResizable(false);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         btnReservation.setText("Reservar");
+        btnReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReservationActionPerformed(evt);
+            }
+        });
 
         btnSearch.setText("Buscar");
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         jLabel2.setText("Documento:");
 
@@ -70,235 +141,299 @@ public class UIReservation extends javax.swing.JFrame {
 
         jLabel4.setText("Edad:");
 
-        jLabel5.setText("Fecha:");
-
-        jLabel6.setText("Hora:");
-
         jLabel7.setText("Tipo:");
 
         jLabel8.setText("Cantidad:");
 
         jLabel9.setText("Valor total:");
 
-        jLabel10.setText("Reservacion");
+        lblTitle.setText("Reservacion");
 
         lblTotalValue.setText("------------------------");
 
-        cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        txtQuantity.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtQuantityFocusLost(evt);
+            }
+        });
+
+        cmbType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "General", "Preferencial" }));
+        cmbType.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                cmbTypeFocusLost(evt);
+            }
+        });
+
+        txtAge.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtAgeFocusLost(evt);
+            }
+        });
+
+        txtDocument.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtDocumentFocusLost(evt);
+            }
+        });
 
         btnRemove.setText("Eliminar");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
 
         btnClean.setText("Limpiar");
+        btnClean.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCleanActionPerformed(evt);
+            }
+        });
 
         btnReturn.setText("Volver");
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnActionPerformed(evt);
+            }
+        });
 
         jLabel12.setText("Codigo:");
+
+        txtID.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtIDFocusLost(evt);
+            }
+        });
 
         jLabel13.setText("Valor Individial:");
 
         lblValue.setText("----------------");
 
-        jLabel11.setText("Asiento:");
-
-        cmbSeat.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        btnUpdate.setText("Modificar");
+        btnUpdate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUpdateActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel13)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblValue, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnReservation)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnSearch)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnRemove)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnClean))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel12)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(63, 63, 63)
-                            .addComponent(jLabel10)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(btnExit))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel3)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtFullName))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel2)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel5)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel6)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtHour, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel4)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel8)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(jLabel9)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lblTotalValue, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel11)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(cmbSeat, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel7)
-                            .addGap(22, 22, 22)
-                            .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(16, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnUpdate)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnRemove)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnClean)
+                        .addGap(81, 81, 81))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnReservation)
+                        .addGap(6, 6, 6)
+                        .addComponent(btnSearch)
+                        .addGap(122, 122, 122))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(jLabel13)
+                        .addGap(6, 6, 6)
+                        .addComponent(lblValue, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(40, 40, 40)
+                        .addComponent(jLabel9)
+                        .addGap(6, 6, 6)
+                        .addComponent(lblTotalValue, javax.swing.GroupLayout.PREFERRED_SIZE, 97, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19))))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnReturn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(49, 49, 49)
+                        .addComponent(lblTitle))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(75, 75, 75)
+                        .addComponent(jLabel12)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel7)
+                        .addGap(22, 22, 22)
+                        .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(51, 51, 51)
+                        .addComponent(jLabel2)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel3)
+                        .addGap(5, 5, 5)
+                        .addComponent(txtFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(97, 97, 97)
+                        .addComponent(jLabel4)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel8)
+                        .addGap(6, 6, 6)
+                        .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(47, 47, 47))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel10)
-                        .addComponent(btnReturn))
-                    .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel12)
-                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
+                    .addComponent(btnReturn)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(lblTitle)))
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel12))
+                    .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel7))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(12, 12, 12)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel2))
+                    .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jLabel3))
                     .addComponent(txtFullName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(txtDocument, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4)
-                    .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(txtHour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(cmbType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel8)
-                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(cmbSeat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel9)
-                    .addComponent(lblTotalValue)
+                .addGap(20, 20, 20)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel8))))
+                .addGap(29, 29, 29)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel13)
-                    .addComponent(lblValue))
-                .addGap(30, 30, 30)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblValue)
+                    .addComponent(jLabel9)
+                    .addComponent(lblTotalValue))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnReservation)
-                    .addComponent(btnSearch)
+                    .addComponent(btnSearch))
+                .addGap(6, 6, 6)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnUpdate)
                     .addComponent(btnRemove)
                     .addComponent(btnClean))
-                .addContainerGap())
+                .addContainerGap(16, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(UIReservation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(UIReservation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(UIReservation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UIReservation.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+    private void btnReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservationActionPerformed
+        if(lblTitle.getText().equals("Realizar Reserva")) {
+            controller.reserve(txtID, cmbType, txtDocument, txtFullName, txtAge, txtQuantity, lblTotalValue);
         }
-        //</editor-fold>
+        else {
+            changeStateReservation();
+        }
+    }//GEN-LAST:event_btnReservationActionPerformed
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new UIReservation().setVisible(true);
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        if(lblTitle.getText().equals("Buscar Reserva")) {
+            if(controller.search(txtID, cmbType, txtDocument, txtFullName, txtAge, txtQuantity, lblTotalValue, lblValue)) {
+                changeStateFound();
             }
-        });
-    }
+        }
+        else {
+            changeStateSearch();
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void txtQuantityFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQuantityFocusLost
+        controller.calculateValue(cmbType.getSelectedItem().toString(), txtQuantity, lblValue, lblTotalValue);
+    }//GEN-LAST:event_txtQuantityFocusLost
+
+    private void txtIDFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtIDFocusLost
+        if(!controller.isNumeric(txtID.getText())) { txtID.setText(""); }
+    }//GEN-LAST:event_txtIDFocusLost
+
+    private void txtDocumentFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDocumentFocusLost
+        if(!controller.isNumeric(txtDocument.getText())) { txtDocument.setText(""); }
+    }//GEN-LAST:event_txtDocumentFocusLost
+
+    private void txtAgeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtAgeFocusLost
+        if(!controller.isNumeric(txtAge.getText())) { txtAge.setText(""); }
+    }//GEN-LAST:event_txtAgeFocusLost
+
+    private void cmbTypeFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_cmbTypeFocusLost
+        controller.calculateValue(cmbType.getSelectedItem().toString(), txtQuantity, lblValue, lblTotalValue);
+    }//GEN-LAST:event_cmbTypeFocusLost
+
+    private void btnCleanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCleanActionPerformed
+        changeStateReservation();
+    }//GEN-LAST:event_btnCleanActionPerformed
+
+    private void btnUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateActionPerformed
+        if(controller.update(txtID, cmbType, txtDocument, txtFullName, txtAge, txtQuantity, lblTotalValue)) {
+            changeStateReservation();
+        }
+    }//GEN-LAST:event_btnUpdateActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        if(controller.delete(txtID)) {
+            changeStateReservation();
+        }
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        controller.back();
+    }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        controller.back();
+    }//GEN-LAST:event_formWindowClosing
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClean;
-    private javax.swing.JButton btnExit;
     private javax.swing.JButton btnRemove;
     private javax.swing.JButton btnReservation;
     private javax.swing.JButton btnReturn;
     private javax.swing.JButton btnSearch;
-    private javax.swing.JComboBox<String> cmbSeat;
+    private javax.swing.JButton btnUpdate;
     private javax.swing.JComboBox<String> cmbType;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblTotalValue;
     private javax.swing.JLabel lblValue;
     private javax.swing.JTextField txtAge;
-    private javax.swing.JTextField txtDate;
     private javax.swing.JTextField txtDocument;
     private javax.swing.JTextField txtFullName;
-    private javax.swing.JTextField txtHour;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtQuantity;
     // End of variables declaration//GEN-END:variables

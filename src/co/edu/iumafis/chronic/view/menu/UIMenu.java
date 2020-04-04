@@ -45,9 +45,14 @@ public class UIMenu extends javax.swing.JFrame {
         btnClose = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         btnReservation.setText("Reservar de Tiquetes");
+        btnReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReservationActionPerformed(evt);
+            }
+        });
 
         btnTicketSale.setText("Venta de Tiquetes");
         btnTicketSale.addActionListener(new java.awt.event.ActionListener() {
@@ -57,6 +62,11 @@ public class UIMenu extends javax.swing.JFrame {
         });
 
         btnClose.setText("Cerrar Sesión");
+        btnClose.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCloseActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -93,32 +103,16 @@ public class UIMenu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnTicketSaleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTicketSaleActionPerformed
-        // TODO add your handling code here:
+        controller.sales();
     }//GEN-LAST:event_btnTicketSaleActionPerformed
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(UIMenu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-        
-        //</editor-fold>
-    }
+    private void btnReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReservationActionPerformed
+        controller.reservations();
+    }//GEN-LAST:event_btnReservationActionPerformed
+
+    private void btnCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCloseActionPerformed
+        controller.logOut();
+    }//GEN-LAST:event_btnCloseActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnClose;
